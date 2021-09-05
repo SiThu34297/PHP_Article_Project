@@ -1,0 +1,17 @@
+{
+    "name": "sithu/php_blog_project",
+    "type": "n",
+    "authors": [
+        {
+            "name": "Sithu",
+            "email": "84319861+SiThu34297@users.noreply.github.com"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Libs\\": "_classes/Libs/",
+            "Helpers\\": "_classes/Helpers/"
+        }
+    }
+}
