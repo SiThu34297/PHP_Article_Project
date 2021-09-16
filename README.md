@@ -1,3 +1,4 @@
-Blog Page CRUD PHP Project Exercise
+# PHP_Article_Project
+Learning PHP CRUD 
+Making Blog Website
 
-Learning PHP 
