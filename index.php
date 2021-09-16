@@ -1,55 +1,119 @@
+<!-- header -->
+<?php include("assets/header.php")?>
+<!-- Navigation-->
+<?php include("assets/nav.php") ?>
+<!-- Page Header-->
+<?php include("assets/banner.php") ?>
+<!-- PHP Posts Code -->
 <?php
-
-use Libs\Database\Article;
 use Libs\Database\MySQL;
-use Helpers\Time;
-include('vendor/autoload.php');
+use Libs\Database\Post;
 
-     $articleTable = new Article(new MySQL());
-     $articles = $articleTable->getArticle();
+$table = new Post(new MySQL());
+$post_count = $table->ShowPost();
+if(isset($_GET['category']))
+{
+     $id = $_GET['category'];
+     $catPosts = $table->ShowPostByCatID($id);
+}
+// for pagination
+//determine which page number visitor is currently on  
+if (!isset ($_GET['page']) ) {  
+     $page = 1;  
+} else {  
+     $page = $_GET['page'];  
+}
+//post pre page
+$post_pre_page = 3;
+//determine the sql LIMIT starting number for the results on the displaying page  
+$page_first_result = ($page-1) * $post_pre_page;    
+
+$posts = $table->Pagination($page_first_result,$post_pre_page);
+
+$number_of_result = count($post_count);
+
+$number_of_page = ceil($number_of_result/$post_pre_page);
+
 ?>
-
-<?php include __DIR__ .'/views/layouts/header.php' ?>
-<div class="container">
-     <!-- php code Add success  -->
-     <?php 
-               session_start();
-               if(isset($_SESSION['AddArticleSuccess'])):
-     ?>
-     <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
-          <?= $_SESSION['AddArticleSuccess'] ?>
-          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-     </div>
-     <?php endif; ?>
-     <?php
-          if(time() - $_SESSION['session_time_stamp'] > 5): 
-          ?>
-     <?php unset($_SESSION['AddArticleSuccess']) ?>
-     <?php endif; ?>
-     <!-- php code  -->
-     <div class="row row-cols-1 row-cols-md-2 g-3 mb-5 mt-2">
-          <?php foreach($articles as $article): ?>
-          <div class="col">
-               <div class="card h-100">
-                    <img src="_actions/photos/<?= $article['image']?>" class="img-thumbnail" alt="image">
-                    <div class="card-body">
-                         <h5 class="card-title"><?= $article['title'] ?></h5>
-                         <p class="card-text"><?= $article['body'] ?></p>
-                    </div>
-                    <div class="card-footer">
-                         <div class="d-flex justify-content-between">
-                              <small class="text-muted">
-                                   Post By: <?= $article['user_name'] ?>
-                                   <?= Time::diffForHumans(new DateTime($article['created_at']))?>
-                              </small>
-                              <a href="detail.php?post=<?= $article['id'] ?>" class="card-lik">View Detail &raquo;</a>
-                         </div>
-                    </div>
+<!-- Main Content-->
+<div class="container px-4 px-lg-5">
+     <div class="row gx-4 gx-lg-5 justify-content-center">
+          <div class="col-md-10 col-lg-8 col-xl-10">
+               <!-- to show category PHP  -->
+               <?php if(isset($_GET['category'])): ?>
+               <!-- condition cat id have or not -->
+               <?php if(empty($catPosts)):?>
+               <!-- if no post with category id -->
+               <h2 class="post-title text-warning">
+                    There is no post for this category!
+               </h2>
+               <?php else: ?>
+               <!-- Post preview-->
+               <?php foreach($catPosts as $catPost):?>
+               <div class="post-preview">
+                    <a href="post.php?post=<?= $catPost['id']?>">
+                         <h2 class="post-title">
+                              <?= $catPost['post_title'] ?>
+                         </h2>
+                         <h3 class="post-subtitle">
+                              <?= $catPost['post_subtitle'] ?>
+                         </h3>
+                    </a>
+                    <p class="post-meta">
+                         Posted by
+                         <a href="#!">
+                              <?= $catPost['post_author'] ?>
+                         </a>
+                         on <?= date('d F, Y',strtotime($catPost['post_date'] ))?>
+                    </p>
                </div>
+               <?php endforeach ?>
+               <!-- Divider-->
+               <hr class="my-4" />
+               <?php endif; ?>
+               <!-- condition cat id have or not code end -->
+               <?php else: ?>
+               <!-- PHP code foreach posts -->
+               <?php foreach($posts as $post): ?>
+               <!-- Post preview-->
+               <div class="post-preview">
+                    <a href="post.php?post=<?= $post['id']?>">
+                         <h2 class="post-title">
+                              <?= $post['post_title'] ?>
+                         </h2>
+                         <h3 class="post-subtitle">
+                              <?= $post['post_subtitle'] ?>
+                         </h3>
+                    </a>
+                    <p class="post-meta">
+                         Posted by
+                         <a href="#!">
+                              <?= $post['post_author'] ?>
+                         </a>
+                         on <?= date('d F, Y',strtotime($post['post_date'] ))?>
+                    </p>
+               </div>
+               <!-- Divider-->
+               <hr class="my-4" />
+               <?php endforeach ?>
+               <!-- end PHP code foreach -->
+               <?php endif; ?>
+               <!-- pagination -->
+               <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                         <?php for($page = 1;$page <= $number_of_page;$page++): ?>
+                         <li class="page-item"><a class="page-link" href="index.php?page=<?= $page ?>"><?= $page ?></a>
+                         </li>
+                         <?php endfor ?>
+                    </ul>
+               </nav>
           </div>
-          <?php endforeach ?>
      </div>
-
 </div>
+<!-- Footer-->
+<?php include("assets/footer.php") ?>
 
-<?php  include __DIR__ .'/views/layouts/footer.php' ?>
+<script>
+let title = document.querySelector("title");
+title.innerHTML = "Media Page";
+</script>

@@ -4,27 +4,35 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit5554d3302c7d8f6221dfea982b6ef0c0
+class ComposerStaticInit594032871999c687c9a76198f2d68b24
 {
     public static $prefixLengthsPsr4 = array (
+        'R' => 
+        array (
+            'Rakit\\Validation\\' => 17,
+        ),
         'L' => 
         array (
             'Libs\\' => 5,
         ),
         'H' => 
         array (
-            'Helpers\\' => 8,
+            'Helper\\' => 7,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
+        'Rakit\\Validation\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/rakit/validation/src',
+        ),
         'Libs\\' => 
         array (
             0 => __DIR__ . '/../..' . '/_classes/Libs',
         ),
-        'Helpers\\' => 
+        'Helper\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/_classes/Helpers',
+            0 => __DIR__ . '/../..' . '/_classes/Helper',
         ),
     );
 
@@ -35,9 +43,9 @@ class ComposerStaticInit5554d3302c7d8f6221dfea982b6ef0c0
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit5554d3302c7d8f6221dfea982b6ef0c0::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit5554d3302c7d8f6221dfea982b6ef0c0::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit5554d3302c7d8f6221dfea982b6ef0c0::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit594032871999c687c9a76198f2d68b24::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit594032871999c687c9a76198f2d68b24::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit594032871999c687c9a76198f2d68b24::$classMap;
 
         }, null, ClassLoader::class);
     }

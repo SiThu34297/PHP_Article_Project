@@ -1,7 +1,6 @@
 <?php 
 namespace Libs\Database;
 
-use PDO;
 use PDOException;
 
 class Comment 
@@ -13,11 +12,43 @@ class Comment
           $this->db = $db->connect();
      }
 
-     public function createComment($data)
+     public function ShowCmt()
      {
           try
           {
-               $query = "INSERT INTO comment (content,user_id,article_id) VALUES (:content,:user_id,:article_id)";
+               $query = "SELECT * FROM comments";
+
+               $stmt = $this->db->query($query);
+
+               return $stmt->fetchAll();
+          }catch(PDOException $e)
+          {
+               return $e->getMessage();
+          }
+     }
+
+     public function ShowCmtByPostID($id)
+     {
+          try
+          {
+               $query = "SELECT * FROM comments WHERE comments.comment_post_id = :id";
+
+               $stmt = $this->db->prepare($query);
+               
+               $stmt->execute([':id' => $id]);
+               
+               return $stmt->fetchAll();
+          }catch(PDOException $e)
+          {
+               return $e->getMessage();
+          }
+     }
+
+     public function StoreCmt($data)
+     {
+          try
+          {
+               $query = "INSERT INTO comments(comment_user,comment_email,comment_post_id,comment_content) VALUES (:comment_user,:comment_email,:comment_post_id,:comment_content)";
 
                $stmt = $this->db->prepare($query);
 
@@ -29,32 +60,15 @@ class Comment
                return $e->getMessage();
           }
      }
-
-     public function getComment($id)
+     public function DeleteCmt($id)
      {
           try
           {
-               $query = "SELECT comment.* , users.user_name FROM comment INNER JOIN users ON comment.user_id = users.id WHERE comment.article_id = $id";
+               $query = "DELETE FROM comments WHERE id = :id";
 
                $stmt = $this->db->prepare($query);
-
-               $stmt->execute();
-
-               return $stmt->fetchAll();
-          }catch(PDOException $e)
-          {
-               return $e->getMessage();
-          }
-     }
-     public function deleteComment($id , $user_id)
-     {
-          try
-          {
-               $query = "DELETE FROM comment WHERE id = $id AND user_id = $user_id";
-
-               $stmt = $this->db->prepare($query);
-
-               $stmt->execute();
+               
+               $stmt->execute([':id'=>$id]);
 
                return $stmt->rowCount();
           }catch(PDOException $e)

@@ -1,9 +1,7 @@
-<?php
-include('../vendor/autoload.php');
-use Helpers\HTTP;
+<?php 
 
 session_start();
 
-unset($_SESSION['user']);
+session_destroy();
 
-HTTP::redirect('/index.php');
+header("location: ../admin/login.php");
